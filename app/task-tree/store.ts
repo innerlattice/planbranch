@@ -161,7 +161,13 @@ function selectReasoningEffort(
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
-  tree: createEmptyTree(),
+  // Workers forbid randomness during module evaluation. This server-only
+  // shell ID is never persisted; each browser still creates its own UUID.
+  tree: createEmptyTree(
+    typeof window === "undefined"
+      ? "00000000-0000-4000-8000-000000000000"
+      : undefined,
+  ),
   history: [],
   future: [],
   notice: null,
